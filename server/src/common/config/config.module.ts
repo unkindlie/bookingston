@@ -6,7 +6,9 @@ import databaseConfig from './database.config';
 @Module({
     imports: [
         AppConfigModule.forRoot({
+            cache: true,
             load: [databaseConfig],
+            envFilePath: ['.env.local'],
         }),
     ],
 })
