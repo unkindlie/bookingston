@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('Books')
 export class BookEntity {
     @PrimaryGeneratedColumn('uuid')
-    id: number;
+    id: string;
 
     @Column({
         type: 'text',
@@ -28,6 +28,7 @@ export class BookEntity {
 
     @Column({
         default: 0,
+        type: 'int',
         name: 'book_quantity',
     })
     quantity: number;
