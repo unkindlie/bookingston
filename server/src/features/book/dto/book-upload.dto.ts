@@ -19,7 +19,7 @@ export class BookUploadDto {
 
     @IsOptional()
     @IsString()
-    @Length(150, 740)
+    @Length(50, 740)
     description?: string;
 
     @IsDecimal({ decimal_digits: '2,2' })
