@@ -1,16 +1,10 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ConfigModule } from './config/config.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
-    imports: [
-        TypeOrmModule.forRoot({
-            type: 'postgres',
-            host: 'localhost',
-        }),
-        ConfigModule,
-    ],
+    imports: [DatabaseModule, ConfigModule],
     controllers: [],
     providers: [],
     exports: [],
