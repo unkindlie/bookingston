@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { TBookShort } from "../../../utils/types/book-short.type";
+
+import { TBookShort } from "../../../utils/types/book/book-short.type";
 import { fetcher } from "../../lib/fetcher";
 
 const BookPage = async () => {
