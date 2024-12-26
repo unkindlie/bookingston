@@ -1,16 +1,10 @@
-import { TBookDetailed } from "../../../../../utils/types/book/book-detailed.type";
-
-export async function GET() {
-    return new Response(JSON.stringify({ message: "hello" }), {
-        status: 200,
-    });
-}
+import { fetcher } from "../../../../lib/fetcher";
 
 export async function PUT(request: Request) {
-    const body = Object.assign({}, (await request.json()) as TBookDetailed);
+    const body = await request.json();
 
     try {
-        await fetch("http://localhost:3000/books/edit", {
+        await fetcher("/books/edit", {
             method: "PUT",
             headers: {
                 Accept: "application/json",
@@ -19,12 +13,10 @@ export async function PUT(request: Request) {
             body: JSON.stringify(body),
         });
 
-        return new Response(JSON.stringify({ message: "success" }), {
-            status: 200,
-        });
+        return Response.json({ message: 'Success' });
     } catch (e) {
         console.log(e);
-        return new Response(JSON.stringify({ message: "error" }), {
+        return new Response(JSON.stringify({ message: 'Success' }), {
             status: 500,
         });
     }

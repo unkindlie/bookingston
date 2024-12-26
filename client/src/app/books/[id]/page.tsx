@@ -1,10 +1,10 @@
 import { TBookDetailed } from "../../../../utils/types/book/book-detailed.type";
 import { fetcher } from "../../../lib/fetcher";
-import { UpdateButton } from '../../../components/features/book/update.button';
+import { UpdateButton } from "../../../components/features/book/update.button";
 
 const fetchFunc = async (id: string) =>
     await fetcher<TBookDetailed>(`/books/${id}`, {
-        next: { tags: [`book-${id}`] }
+        next: { tags: [`book-${id}`] },
     });
 
 export const generateMetadata = async ({

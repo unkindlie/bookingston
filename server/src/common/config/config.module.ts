@@ -8,7 +8,7 @@ import databaseConfig from './database.config';
         AppConfigModule.forRoot({
             cache: true,
             load: [databaseConfig],
-            envFilePath: ['.env.local'],
+            envFilePath: ['.env.development'],
         }),
     ],
 })
