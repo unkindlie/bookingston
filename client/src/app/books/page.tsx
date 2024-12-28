@@ -4,7 +4,9 @@ import { TBookShort } from "../../../utils/types/book/book-short.type";
 import { fetcher } from "../../lib/fetcher";
 
 const BookPage = async () => {
-    const books = await fetcher<TBookShort[]>("/books");
+    const books = await fetcher<TBookShort[]>("/books", {
+        cache: 'no-store'
+    });
 
     return (
         <div className="flex flex-col justify-center items-center min-h-screen gap-2">
