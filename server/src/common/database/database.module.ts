@@ -16,7 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
                 entities: [__dirname + '/../../features/**/*.entity.{ts,js}'],
                 migrations: [__dirname + '/migrations/*.{js,ts}'],
                 synchronize: configService.get('NODE_ENV') !== 'production',
-                migrationsRun: configService.get('NODE_ENV') === 'production', 
+                migrationsRun: configService.get('NODE_ENV') === 'production',
             }),
             inject: [ConfigService],
         }),
