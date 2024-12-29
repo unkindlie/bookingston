@@ -7,7 +7,9 @@ import {
     ParseUUIDPipe,
     Post,
     Put,
+    UseInterceptors,
 } from '@nestjs/common';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 import { ExposingSerialization } from '../../common/decorators/exposing-serialization.decorator';
 import { MessageInterceptor } from '../../common/interceptors/message.interceptor';
@@ -18,6 +20,7 @@ import { BookShortDto } from './dto/book-short.dto';
 import { BookDetailedDto } from './dto/book-detailed.dto';
 import * as BookConstants from './constants/book.constants';
 
+// TODO: create an interceptor that takes parameters to create a directory-like key for Redis Insight
 @Controller('books')
 export class BookController {
     constructor(private service: BookService) {}
@@ -29,6 +32,8 @@ export class BookController {
     }
 
     @ExposingSerialization(BookDetailedDto)
+    @UseInterceptors(CacheInterceptor)
+    @CacheTTL(50)
     @Get(':id')
     async getBookById(
         @Param('id', ParseUUIDPipe) id: string,

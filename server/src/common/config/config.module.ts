@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule as AppConfigModule } from '@nestjs/config';
 
 import databaseConfig from './database.config';
+import cacheConfig from '../cache/cache.config';
 
 @Module({
     imports: [
         AppConfigModule.forRoot({
             cache: true,
-            load: [databaseConfig],
+            load: [databaseConfig, cacheConfig],
             envFilePath: [
                 process.env.NODE_ENV != 'production' && '.env.development',
                 '.env.production',

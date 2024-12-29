@@ -11,7 +11,7 @@ export class BookService {
     async getBooks(): Promise<BookEntity[]> {
         return await this.repo.getBooks();
     }
-    async getBookById(id: string) {
+    async getBookById(id: string): Promise<BookEntity> {
         return await this.repo.getBookByCondition({ id });
     }
     async addBook(input: BookUploadDto): Promise<void> {
