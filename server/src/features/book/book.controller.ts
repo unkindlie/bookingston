@@ -7,7 +7,9 @@ import {
     ParseUUIDPipe,
     Post,
     Put,
+    Query,
     UseInterceptors,
+    ValidationPipe,
 } from '@nestjs/common';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
@@ -19,16 +21,22 @@ import { BookEntity } from './book.entity';
 import { BookShortDto } from './dto/book-short.dto';
 import { BookDetailedDto } from './dto/book-detailed.dto';
 import * as BookConstants from './constants/book.constants';
+import { BookSearchDto } from './dto/book-search.dto';
+import { PaginatedDataDto } from '../../common/dto/paginated-data.dto';
 
 // TODO: create an interceptor that takes parameters to create a directory-like key for Redis Insight
 @Controller('books')
 export class BookController {
     constructor(private service: BookService) {}
 
-    @ExposingSerialization(BookShortDto)
+    @ExposingSerialization(PaginatedDataDto(BookShortDto))
     @Get()
-    async getBooks(): Promise<BookEntity[]> {
-        return this.service.getBooks();
+    async getBooks(
+        @Query(new ValidationPipe({ skipMissingProperties: false }))
+        search: BookSearchDto,
+    ) {
+        const data = await this.service.getBooks(search);
+        return { data, ...search };
     }
 
     @ExposingSerialization(BookDetailedDto)
