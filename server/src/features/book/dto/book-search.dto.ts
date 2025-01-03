@@ -1,3 +1,3 @@
-import { PaginationDto } from '../../../common/dto/pagingation.dto';
+import { PaginationDto } from '../../../common/util/dto/pagingation.dto';
 
 export class BookSearchDto extends PaginationDto {}
