@@ -13,4 +13,7 @@ export class BookShortDto {
 
     @Expose()
     quantity: number;
+
+    @Expose()
+    imageUrl: string;
 }

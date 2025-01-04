@@ -14,19 +14,19 @@ export class SupabaseStorageService {
         return await this.client.storage.listBuckets();
     }
     async uploadFileToBucket(file: Express.Multer.File, bucketName: string) {
-        const { data, error } = await this.storageClient
+        const response = await this.storageClient
             .from(bucketName)
             .upload(file.originalname, file.buffer, {
                 contentType: file.mimetype,
             });
 
-        return { data, error };
+        return response;
     }
-    async getFileUrl(publicUrl: string, bucketName: string) {
+    getFileUrl(fileUrl: string, bucketName: string): string {
         const {
-            data: { publicUrl: url },
-        } = this.storageClient.from(bucketName).getPublicUrl(publicUrl);
+            data: { publicUrl },
+        } = this.storageClient.from(bucketName).getPublicUrl(fileUrl);
 
-        return url;
+        return publicUrl;
     }
 }

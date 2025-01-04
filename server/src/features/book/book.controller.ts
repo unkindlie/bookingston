@@ -8,11 +8,12 @@ import {
     Post,
     Put,
     Query,
-    UploadedFile,
+    UploadedFiles,
     UseInterceptors,
     ValidationPipe,
 } from '@nestjs/common';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 import { ExposingSerialization } from '../../common/decorators/exposing-serialization.decorator';
 import { MessageInterceptor } from '../../common/util/interceptors/message.interceptor';
@@ -24,7 +25,6 @@ import { BookDetailedDto } from './dto/book-detailed.dto';
 import * as BookConstants from './constants/book.constants';
 import { BookSearchDto } from './dto/book-search.dto';
 import { PaginatedDataDto } from '../../common/util/dto/paginated-data.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 // TODO: create an interceptor that takes parameters to create a directory-like key for Redis Insight
 @Controller('books')
@@ -52,17 +52,13 @@ export class BookController {
     }
 
     @Post('add')
+    @UseInterceptors(FilesInterceptor('images'))
     @MessageInterceptor(BookConstants.BOOK_ADD_MESSAGE)
-    async addBook(@Body() body: BookUploadDto): Promise<void> {
-        await this.service.addBook(body);
-    }
-
-    @Post('upload-image')
-    @UseInterceptors(FileInterceptor('image'))
-    async uploadImage(@UploadedFile() file: Express.Multer.File) {
-        const data = await this.service.uploadFile(file);
-
-        return { fileUrl: data };
+    async addBook(
+        @Body(new ValidationPipe({ transform: true })) body: BookUploadDto,
+        @UploadedFiles() files: Express.Multer.File[],
+    ): Promise<void> {
+        return await this.service.addBook(body, files);
     }
 
     @Put('edit')

@@ -2,25 +2,47 @@ import { Injectable } from '@nestjs/common';
 
 import { BookRepository } from './book.repository';
 import { BookUploadDto } from './dto/book-upload.dto';
-import { BookEntity } from './book.entity';
 import { BookSearchDto } from './dto/book-search.dto';
-import { SupabaseStorageService } from '../../common/supabase/supabase-storage.service';
+import { BookImageService } from '../book-image/book-image.service';
+import { BookDetailedDto } from './dto/book-detailed.dto';
+import { BookShortDto } from './dto/book-short.dto';
 
 @Injectable()
 export class BookService {
     constructor(
         private repo: BookRepository,
-        private storageService: SupabaseStorageService,
+        private bookImageService: BookImageService,
     ) {}
 
-    async getBooks(options: BookSearchDto): Promise<BookEntity[]> {
-        return await this.repo.getBooks(options);
+    async getBooks(options: BookSearchDto): Promise<Array<BookShortDto>> {
+        const booksData = await this.repo.getBooks(options);
+        const books = await Promise.all(
+            booksData.map(async (book) => {
+                const imageUrl =
+                    await this.bookImageService.getTitleImageForBook(book.id);
+                return { ...book, imageUrl };
+            }),
+        );
+
+        return books;
     }
-    async getBookById(id: string): Promise<BookEntity> {
-        return await this.repo.getBookByCondition({ id });
+    async getBookById(id: string): Promise<BookDetailedDto> {
+        const bookData = await this.repo.getBookByCondition({ id });
+        const images = await this.bookImageService.getImagesForBook(id);
+
+        return { ...bookData, images };
     }
-    async addBook(input: BookUploadDto): Promise<void> {
-        await this.repo.create(input);
+    async addBook(
+        input: BookUploadDto,
+        images: Array<Express.Multer.File>,
+    ): Promise<void> {
+        const id = await this.repo.create(input);
+
+        if (images.length !== 0) {
+            for (const image of images) {
+                await this.bookImageService.uploadBookImage(image, id);
+            }
+        }
     }
     async editBookInfo(input: BookUploadDto): Promise<void> {
         const { id, ...rest } = input;
@@ -29,17 +51,5 @@ export class BookService {
     }
     async removeBook(bookId: string): Promise<void> {
         await this.repo.delete(bookId);
-    }
-    async uploadFile(file: Express.Multer.File): Promise<string | null> {
-        const { data } = await this.storageService.uploadFileToBucket(
-            file,
-            'images',
-        );
-
-        if (data) {
-            return this.storageService.getFileUrl(data.path, 'images');
-        }
-
-        return null;
     }
 }
