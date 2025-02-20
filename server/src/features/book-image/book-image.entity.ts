@@ -14,7 +14,7 @@ export class BookImageEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => BookEntity)
+    @ManyToOne(() => BookEntity, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'book_id' })
     book: BookEntity;
 
