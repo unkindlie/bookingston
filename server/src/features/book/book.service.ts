@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { v4 } from 'uuid';
 
 import { BookRepository } from './book.repository';
 import { BookAddDto } from './dto/book-upload.dto';
@@ -37,7 +38,8 @@ export class BookService {
         input: BookAddDto,
         images: Array<Express.Multer.File>,
     ): Promise<void> {
-        const id = await this.repo.create(input);
+        const id = v4();
+        await this.repo.createEntity(input, id);
 
         if (images.length !== 0) {
             for (const image of images) {

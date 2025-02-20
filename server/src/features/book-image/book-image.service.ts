@@ -22,10 +22,11 @@ export class BookImageService {
         image: Express.Multer.File,
         bookId: string,
     ): Promise<void> {
-        const imageId = await this.imageService.uploadImage(
-            image,
-            BOOK_BUCKET_NAME,
-        );
+        const imageId = await this.imageService.uploadImage(image, {
+            bucketName: BOOK_BUCKET_NAME,
+            entityId: bookId,
+            entityName: '',
+        });
 
         await this.repo.uploadImage(imageId, bookId);
     }

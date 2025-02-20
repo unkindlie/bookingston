@@ -31,12 +31,10 @@ export class BookRepository {
 
         return book;
     }
-    async create(input: BookAddDto): Promise<string> {
-        const entity = this.repo.create(input);
+    async createEntity(input: BookAddDto, id: string): Promise<void> {
+        const entity = this.repo.create({ ...input, id });
 
-        const result = await this.repo.insert(entity);
-
-        return result.identifiers.at(0)['id'];
+        await this.repo.insert(entity);
     }
     async update(id: string, input: BookAddDto): Promise<void> {
         const exists = await this.repo.existsBy({ id });

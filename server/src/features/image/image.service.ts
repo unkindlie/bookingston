@@ -2,6 +2,7 @@ import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 
 import { ImageRepository } from './image.repository';
 import { SupabaseStorageService } from '../../common/supabase/supabase-storage.service';
+import { ImagePayloadDto } from './dto/image-payload.dto';
 
 @Injectable()
 export class ImageService {
@@ -10,13 +11,25 @@ export class ImageService {
         private storageService: SupabaseStorageService,
     ) {}
 
+    // TODO: add different identifiers and use entity's name
     async uploadImage(
         image: Express.Multer.File,
-        bucketName: string,
+        payload: ImagePayloadDto,
     ): Promise<string> {
+        const { originalname: on } = image;
+
+        const imageExt = '.' + on.split('.').at(-1);
+        const imageName =
+            on.slice(0, on.lastIndexOf(',')) +
+            '-' +
+            payload.entityId +
+            imageExt;
+
+        image.originalname = imageName;
+
         const { data, error } = await this.storageService.uploadFileToBucket(
             image,
-            bucketName,
+            payload.bucketName,
         );
         if (!data) {
             throw new UnprocessableEntityException(
@@ -25,7 +38,10 @@ export class ImageService {
             );
         }
 
-        const fullPath = this.storageService.getFileUrl(data.path, bucketName);
+        const fullPath = this.storageService.getFileUrl(
+            data.path,
+            payload.bucketName,
+        );
         const id = await this.repo.addImage(fullPath);
 
         return id;
