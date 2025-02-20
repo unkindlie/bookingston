@@ -1,6 +1,7 @@
 import { TBookDetailed } from "../../../../utils/types/book/book-detailed.type";
 import { fetcher } from "../../../lib/fetcher";
 import { UpdateButton } from "../../../components/features/book/update.button";
+import styles from "./styles.module.css";
 
 const fetchFunc = async (id: string) =>
     await fetcher<TBookDetailed>(`/books/${id}`, {
@@ -32,8 +33,8 @@ const BookDetailedPage = async ({
     const book = await fetchFunc(id);
 
     return (
-        <div className="flex flex-col justify-center items-center gap-4 min-h-screen">
-            <h1 className="text-4xl">{book.name}</h1>
+        <div className={styles.bookDescription}>
+            <h1>{book.name}</h1>
             <span>
                 {book.description ?? "There is no description for that moment."}
             </span>

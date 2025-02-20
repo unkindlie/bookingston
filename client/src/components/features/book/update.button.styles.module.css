@@ -1,0 +1,7 @@
+.updateButton {
+    border: 0;
+    padding: 8px 15px;
+    background-color: gainsboro;
+    border-radius: 5px;
+    cursor: pointer;
+}

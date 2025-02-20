@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
 import { BookRepository } from './book.repository';
-import { BookUploadDto } from './dto/book-upload.dto';
+import { BookAddDto } from './dto/book-upload.dto';
 import { BookSearchDto } from './dto/book-search.dto';
 import { BookImageService } from '../book-image/book-image.service';
 import { BookDetailedDto } from './dto/book-detailed.dto';
 import { BookShortDto } from './dto/book-short.dto';
+import { BookEditDto } from './dto/book-edit.dto';
 
 @Injectable()
 export class BookService {
@@ -33,7 +34,7 @@ export class BookService {
         return { ...bookData, images };
     }
     async addBook(
-        input: BookUploadDto,
+        input: BookAddDto,
         images: Array<Express.Multer.File>,
     ): Promise<void> {
         const id = await this.repo.create(input);
@@ -44,7 +45,7 @@ export class BookService {
             }
         }
     }
-    async editBookInfo(input: BookUploadDto): Promise<void> {
+    async editBookInfo(input: BookEditDto): Promise<void> {
         const { id, ...rest } = input;
 
         await this.repo.update(id, rest);

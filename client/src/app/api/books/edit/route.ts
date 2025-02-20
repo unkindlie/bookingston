@@ -13,10 +13,10 @@ export async function PUT(request: Request) {
             body: JSON.stringify(body),
         });
 
-        return Response.json({ message: 'Success' });
+        return Response.json({ message: "Success" });
     } catch (e) {
         console.log(e);
-        return new Response(JSON.stringify({ message: 'Success' }), {
+        return new Response(JSON.stringify({ message: "Error" }), {
             status: 500,
         });
     }

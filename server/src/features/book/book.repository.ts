@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 
 import { BookEntity } from './book.entity';
-import { BookUploadDto } from './dto/book-upload.dto';
+import { BookAddDto } from './dto/book-upload.dto';
 import { BOOK_NOT_FOUND } from './constants/book.constants';
 import { BookSearchDto } from './dto/book-search.dto';
 
@@ -31,14 +31,14 @@ export class BookRepository {
 
         return book;
     }
-    async create(input: BookUploadDto): Promise<string> {
+    async create(input: BookAddDto): Promise<string> {
         const entity = this.repo.create(input);
 
         const result = await this.repo.insert(entity);
 
         return result.identifiers.at(0)['id'];
     }
-    async update(id: string, input: BookUploadDto): Promise<void> {
+    async update(id: string, input: BookAddDto): Promise<void> {
         const exists = await this.repo.existsBy({ id });
         if (!exists) {
             throw new NotFoundException(BOOK_NOT_FOUND);

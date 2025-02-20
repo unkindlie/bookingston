@@ -1,6 +1,5 @@
 import { Type } from 'class-transformer';
 import {
-    IsDecimal,
     IsNumber,
     IsOptional,
     IsString,
@@ -9,7 +8,10 @@ import {
     Min,
 } from 'class-validator';
 
-export class BookAddDto {
+export class BookEditDto {
+    @IsUUID()
+    id: string;
+
     @IsString()
     @Length(20, 120)
     name: string;
@@ -19,7 +21,7 @@ export class BookAddDto {
     @Length(50, 740)
     description?: string;
 
-    @IsDecimal({ decimal_digits: '0,2' })
+    @IsNumber({ maxDecimalPlaces: 2 })
     price: number;
 
     @IsOptional()

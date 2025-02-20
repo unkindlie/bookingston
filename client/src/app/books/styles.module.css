@@ -1,0 +1,21 @@
+.main {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    min-height: 100vh;
+    gap: 16;
+}
+
+.booksContainer {
+    display: grid;
+    grid-template-columns: auto auto;
+
+    gap: 8;
+}
+
+.booksContainer > a {
+    text-decoration: none;
+}

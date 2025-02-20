@@ -18,13 +18,14 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ExposingSerialization } from '../../common/decorators/exposing-serialization.decorator';
 import { MessageInterceptor } from '../../common/util/interceptors/message.interceptor';
 import { BookService } from './book.service';
-import { BookUploadDto } from './dto/book-upload.dto';
+import { BookAddDto } from './dto/book-upload.dto';
 import { BookEntity } from './book.entity';
 import { BookShortDto } from './dto/book-short.dto';
 import { BookDetailedDto } from './dto/book-detailed.dto';
 import * as BookConstants from './constants/book.constants';
 import { BookSearchDto } from './dto/book-search.dto';
 import { PaginatedDataDto } from '../../common/util/dto/paginated-data.dto';
+import { BookEditDto } from './dto/book-edit.dto';
 
 // TODO: create an interceptor that takes parameters to create a directory-like key for Redis Insight
 @Controller('books')
@@ -55,7 +56,7 @@ export class BookController {
     @UseInterceptors(FilesInterceptor('images'))
     @MessageInterceptor(BookConstants.BOOK_ADD_MESSAGE)
     async addBook(
-        @Body(new ValidationPipe({ transform: true })) body: BookUploadDto,
+        @Body(new ValidationPipe({ transform: true })) body: BookAddDto,
         @UploadedFiles() files: Express.Multer.File[],
     ): Promise<void> {
         return await this.service.addBook(body, files);
@@ -63,7 +64,7 @@ export class BookController {
 
     @Put('edit')
     @MessageInterceptor(BookConstants.BOOK_EDIT_MESSAGE)
-    async editBookInfo(@Body() body: BookUploadDto): Promise<void> {
+    async editBookInfo(@Body() body: BookEditDto): Promise<void> {
         await this.service.editBookInfo(body);
     }
 
