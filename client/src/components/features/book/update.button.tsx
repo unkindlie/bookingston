@@ -1,23 +1,19 @@
 "use client";
 
-import { TBookDetailed } from "../../../../utils/types/book/book-detailed.type";
+import { TBookEdit } from '../../../../utils/types/book/book-edit.type';
 import { revalidateBook } from "../../../lib/actions";
-import styles from "./update.button.styles.module.css";
+import styles from "./update.button.module.css";
 
 type UpdateButtonProps = {
-    book: TBookDetailed;
+    book: TBookEdit;
 };
 
 export const UpdateButton = ({ book }: UpdateButtonProps) => {
-    const date = new Date();
     const updateBook = async () => {
-        console.log(book);
         await fetch("/api/books/edit", {
             method: "PUT",
             body: JSON.stringify({
                 ...book,
-                price: book.price.toString(),
-                name: date.toUTCString(),
                 description:
                     "asfosihfoidhfisdhfpidsjifdpfdspfhdspfdsipjfdsipjfpidshjfipdshfidsjfipdsjp9fsupfsdup",
             }),

@@ -1,4 +1,5 @@
 import { TBookDetailed } from "../../../../utils/types/book/book-detailed.type";
+import { TBookEdit } from '../../../../utils/types/book/book-edit.type';
 import { fetcher } from "../../../lib/fetcher";
 import { UpdateButton } from "../../../components/features/book/update.button";
 import styles from "./styles.module.css";
@@ -32,6 +33,8 @@ const BookDetailedPage = async ({
     const { id } = await params;
     const book = await fetchFunc(id);
 
+    const { images, ...rest } = book;
+
     return (
         <div className={styles.bookDescription}>
             <h1>{book.name}</h1>
@@ -40,7 +43,8 @@ const BookDetailedPage = async ({
             </span>
             <span>Price: {book.price} UAH</span>
             <span>Quantity: {book.quantity} pcs</span>
-            <UpdateButton book={book} />
+            <span>Images length: {images.length}</span>
+            <UpdateButton book={rest as TBookEdit} />
         </div>
     );
 };
