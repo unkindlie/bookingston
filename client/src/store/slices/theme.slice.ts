@@ -1,9 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+    themeValue: "soft-pink",
+};
+
 const themeSlice = createSlice({
     name: "theme",
-    initialState: "soft-pink",
-    reducers: {},
+    initialState,
+    reducers: {
+        setOtherValue: (state) => {
+            state.themeValue = "soft-blue";
+        },
+    },
 });
 
 const themeReducer = themeSlice.reducer;

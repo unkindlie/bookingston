@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ReducerTest } from "../components/features/test/ReducerTest";
 import styles from "./styles.module.css";
 
 export default function Home() {
@@ -9,6 +10,7 @@ export default function Home() {
             <Link className={styles.link} href={"/books"}>
                 Go to books
             </Link>
+            <ReducerTest />
         </main>
     );
 }
