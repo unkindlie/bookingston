@@ -3,8 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 
 import { BookEntity } from './book.entity';
-import { BookUploadDto } from './dto/book-upload.dto';
+import { BookAddDto } from './dto/book-upload.dto';
 import { BOOK_NOT_FOUND } from './constants/book.constants';
+import { BookSearchDto } from './dto/book-search.dto';
 
 @Injectable()
 export class BookRepository {
@@ -12,8 +13,11 @@ export class BookRepository {
         @InjectRepository(BookEntity) private repo: Repository<BookEntity>,
     ) {}
 
-    async getBooks(): Promise<BookEntity[]> {
-        return await this.repo.find();
+    async getBooks(options: BookSearchDto): Promise<BookEntity[]> {
+        return await this.repo.find({
+            skip: options.take * (options.page - 1),
+            take: options.take,
+        });
     }
     async getBookByCondition(
         condition: FindOptionsWhere<BookEntity>,
@@ -27,12 +31,12 @@ export class BookRepository {
 
         return book;
     }
-    async create(input: BookUploadDto): Promise<void> {
-        const entity = this.repo.create(input);
+    async createEntity(input: BookAddDto, id: string): Promise<void> {
+        const entity = this.repo.create({ ...input, id });
 
         await this.repo.insert(entity);
     }
-    async update(id: string, input: BookUploadDto): Promise<void> {
+    async update(id: string, input: BookAddDto): Promise<void> {
         const exists = await this.repo.existsBy({ id });
         if (!exists) {
             throw new NotFoundException(BOOK_NOT_FOUND);

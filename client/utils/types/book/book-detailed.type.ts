@@ -4,4 +4,5 @@ export type TBookDetailed = {
     description: string | null;
     price: number;
     quantity: number;
+    images: unknown[];
 }

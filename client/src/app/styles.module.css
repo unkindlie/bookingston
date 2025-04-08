@@ -1,0 +1,15 @@
+.mainSector {
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 20;
+}
+
+.link {
+    text-decoration: none;
+}

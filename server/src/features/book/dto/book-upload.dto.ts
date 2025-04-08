@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
     IsDecimal,
     IsNumber,
@@ -8,11 +9,7 @@ import {
     Min,
 } from 'class-validator';
 
-export class BookUploadDto {
-    @IsOptional()
-    @IsUUID()
-    id?: string;
-
+export class BookAddDto {
     @IsString()
     @Length(20, 120)
     name: string;
@@ -22,10 +19,11 @@ export class BookUploadDto {
     @Length(50, 740)
     description?: string;
 
-    @IsDecimal({ decimal_digits: '2,2' })
+    @IsDecimal({ decimal_digits: '0,2' })
     price: number;
 
     @IsOptional()
+    @Type(() => Number)
     @IsNumber()
     @Min(0)
     quantity?: number;

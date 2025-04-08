@@ -1,8 +1,25 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 
-import { BookShortDto } from './book-short.dto';
+import { ImageEntity } from '../../image/image.entity';
 
-export class BookDetailedDto extends BookShortDto {
+export class BookDetailedDto {
+    @Expose()
+    id: string;
+
+    @Expose()
+    name: string;
+
+    @Expose()
+    @Type(() => Number)
+    price: number;
+
+    @Expose()
+    quantity: number;
+
     @Expose()
     description: string;
+
+    @Expose()
+    @Type(() => ImageEntity)
+    images: Array<ImageEntity>;
 }

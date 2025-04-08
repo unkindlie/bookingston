@@ -12,5 +12,8 @@ export interface Type<T = any> {
 export const ExposingSerialization = (type: Type<any>) =>
     applyDecorators(
         UseInterceptors(ClassSerializerInterceptor),
-        SerializeOptions({ type, excludeExtraneousValues: true }),
+        SerializeOptions({
+            type,
+            excludeExtraneousValues: true,
+        }),
     );

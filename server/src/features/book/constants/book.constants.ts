@@ -3,3 +3,5 @@ export const BOOK_EDIT_MESSAGE = 'Book was edited successfully';
 export const BOOK_REMOVE_MESSAGE = 'Book was removed successfully';
 
 export const BOOK_NOT_FOUND = 'Such book does not exist';
+
+export const BOOK_BUCKET_NAME = 'book-images';
