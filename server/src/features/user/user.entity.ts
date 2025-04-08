@@ -11,7 +11,20 @@ export class UserEntity {
     name: string;
 
     @Column({
-        name: 'user_password'
+        name: 'user_password',
     })
     password: string;
+
+    @Column({
+        name: 'user_description',
+        length: 500,
+        nullable: true,
+    })
+    description: string;
+
+    @Column({
+        name: 'user_nickname',
+        nullable: true,
+    })
+    nickname: string;
 }
