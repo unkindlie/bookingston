@@ -19,11 +19,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
             statusCode: status,
             data: null,
             error: {
-                name: exception.name
-                    .split(/(?=[A-Z])/)
-                    .slice(0, -1)
-                    .join(' '),
-                cause: exception.message,
+                name: exception.getResponse()['error'],
+                message: exception.getResponse()['message'],
                 date: new Date().toISOString(),
                 path: req.path,
             },

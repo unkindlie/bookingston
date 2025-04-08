@@ -20,7 +20,7 @@ export class HttpInterceptor implements NestInterceptor {
         return next.handle().pipe(
             map((data) => ({
                 statusCode: res.statusCode,
-                data,
+                data: data || null,
                 error: null,
             })),
         );
