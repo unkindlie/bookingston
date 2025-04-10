@@ -8,6 +8,7 @@ import { FindOptionsWhere, Repository } from 'typeorm';
 
 import { UserEntity } from './user.entity';
 import { UserCreateDto } from './dto/user-create.dto';
+import { PaginationDto } from '../../common/util/dto/pagingation.dto';
 
 @Injectable()
 export class UserRepository {
@@ -15,8 +16,8 @@ export class UserRepository {
         @InjectRepository(UserEntity) private repo: Repository<UserEntity>,
     ) {}
 
-    async getUsers(): Promise<UserEntity[]> {
-        return await this.repo.find();
+    async getUsers(input: PaginationDto): Promise<UserEntity[]> {
+        return await this.repo.find({});
     }
     async getUserByCondition(
         condition: FindOptionsWhere<UserEntity>,
