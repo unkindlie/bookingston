@@ -26,6 +26,11 @@ export class UserService {
             nickname: userNickname,
         });
     }
+    async getUserByEmail(emailAddress: string): Promise<UserEntity> {
+        return await this.userRepo.getUserByCondition({
+            emailAddress,
+        });
+    }
     async createUser(input: UserCreateDto): Promise<void> {
         const exists = await this.userRepo.checkIfUserExists([
             { name: input.name },
