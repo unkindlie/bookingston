@@ -1,14 +1,11 @@
-import {
-    ConflictException,
-    Injectable,
-    NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 
 import { UserEntity } from './user.entity';
 import { UserCreateDto } from './dto/user-create.dto';
 import { PaginationDto } from '../../common/util/dto/pagingation.dto';
+import { UserEditDto } from './dto/user-edit.dto';
 
 @Injectable()
 export class UserRepository {
@@ -17,7 +14,10 @@ export class UserRepository {
     ) {}
 
     async getUsers(input: PaginationDto): Promise<UserEntity[]> {
-        return await this.repo.find({});
+        return await this.repo.find({
+            take: input.take,
+            skip: input.take * (input.page - 1),
+        });
     }
     async getUserByCondition(
         condition: FindOptionsWhere<UserEntity>,
@@ -30,29 +30,23 @@ export class UserRepository {
         return user;
     }
     async createUser(input: UserCreateDto): Promise<void> {
-        const exists = await this.repo.existsBy([
-            { name: input.name },
-            input.nickname && { nickname: input.nickname },
-            { emailAddress: input.emailAddress },
-        ]);
-        if (exists) {
-            throw new ConflictException(
-                'User with such information already exists',
-            );
-        }
-
         const entity = this.repo.create(input);
 
         await this.repo.insert(entity);
     }
-    async deleteUser(userId: number): Promise<void> {
-        const exists = await this.repo.existsBy({ id: userId });
-        if (!exists) {
-            throw new NotFoundException("Such user doesn't exists");
-        }
+    async editUserInfo(input: UserEditDto): Promise<void> {
+        const { id, ...info } = input;
 
+        await this.repo.update(id, info);
+    }
+    async deleteUser(userId: number): Promise<void> {
         const entity = await this.repo.preload({ id: userId });
 
         await this.repo.remove(entity);
+    }
+    async checkIfUserExists(
+        options: FindOptionsWhere<UserEntity> | FindOptionsWhere<UserEntity>[],
+    ): Promise<boolean> {
+        return await this.repo.existsBy(options);
     }
 }

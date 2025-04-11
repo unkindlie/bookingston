@@ -7,6 +7,7 @@ import {
     HttpStatus,
     Param,
     ParseIntPipe,
+    Patch,
     Post,
     Query,
     ValidationPipe,
@@ -20,6 +21,8 @@ import { UserShortDto } from './dto/user-short.dto';
 import { PaginationDto } from '../../common/util/dto/pagingation.dto';
 import { PaginatedDataDto } from '../../common/util/dto/paginated-data.dto';
 import { UserDetailedDto } from './dto/user-detailed.dto';
+import { MessageResponse } from '../../common/util/types/types';
+import { UserEditDto } from './dto/user-edit.dto';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PaginatedUserShortItems = new (PaginatedDataDto(UserShortDto))();
@@ -56,18 +59,23 @@ export class UserController {
 
     @HttpCode(HttpStatus.CREATED)
     @Post()
-    async createUser(
-        @Body(ValidationPipe) body: UserCreateDto,
-    ): Promise<{ message: string }> {
+    async createUser(@Body() body: UserCreateDto): Promise<MessageResponse> {
         await this.service.createUser(body);
 
         return { message: 'User created successfully' };
     }
 
+    @Patch('edit-info')
+    async editUserInfo(@Body() body: UserEditDto) {
+        await this.service.editUserInfo(body);
+
+        return { message: 'User updated successfully' };
+    }
+
     @Delete(':id')
     async deleteUser(
         @Param('id', ParseIntPipe) id: number,
-    ): Promise<{ message: string }> {
+    ): Promise<MessageResponse> {
         await this.service.deleteUser(id);
 
         return { message: 'User deleted success' };

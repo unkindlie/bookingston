@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 
 export class UserCreateDto {
-    @IsString()
+    @IsString({ message: 'Name should be a string' })
     name: string;
 
     @IsString()
@@ -24,10 +24,13 @@ export class UserCreateDto {
     @MaxLength(32)
     password: string;
 
-    @IsString()
+    @IsString({ message: 'Nickname should be a string' })
     @IsOptional()
     nickname: string;
 
-    @IsEmail()
+    @IsEmail(
+        {},
+        { message: 'The given string does not look like email address' },
+    )
     emailAddress: string;
 }

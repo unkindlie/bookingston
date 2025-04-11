@@ -20,7 +20,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
             data: null,
             error: {
                 name: exception.getResponse()['error'],
-                message: exception.getResponse()['message'],
+                cause: exception.getResponse()['message'],
                 date: new Date().toISOString(),
                 path: req.path,
             },
