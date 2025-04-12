@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Get,
     HttpCode,
     HttpStatus,
     Post,
@@ -13,6 +14,7 @@ import { LocalAuthGuard } from '../../common/guards/local-auth.guard';
 import { UserCreateDto } from '../user/dto/user-create.dto';
 import { MessageResponse } from '../../common/util/types/types';
 import { AuthService } from './auth.service';
+import { JwtGuard } from '../../common/guards/jwt.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -29,6 +31,12 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Req() req: Request) {
+        return req.user;
+    }
+
+    @UseGuards(JwtGuard)
+    @Get('current-user')
+    getUser(@Req() req: Request) {
         return req.user;
     }
 }
