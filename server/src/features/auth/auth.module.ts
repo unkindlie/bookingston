@@ -5,11 +5,21 @@ import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from '../../common/strategies/local.strategy';
-import { JwtStrategy } from '../../common/strategies/jwt.strategy';
+import { AccessTokenStrategy } from '../../common/strategies/access-token.strategy';
+import { CookieHelper } from '../../common/helpers/cookie.helper';
+import { TokenHelper } from '../../common/helpers/token.helper';
+import { RefreshTokenStragegy } from '../../common/strategies/refresh-token.strategy';
 
 @Module({
     imports: [UserModule, JwtModule.register({})],
     controllers: [AuthController],
-    providers: [AuthService, LocalStrategy, JwtStrategy],
+    providers: [
+        AuthService,
+        LocalStrategy,
+        AccessTokenStrategy,
+        RefreshTokenStragegy,
+        CookieHelper,
+        TokenHelper,
+    ],
 })
 export class AuthModule {}

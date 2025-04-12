@@ -6,7 +6,10 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserPayloadDto } from '../../features/user/dto/user-payload.dto';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class AccessTokenStrategy extends PassportStrategy(
+    Strategy,
+    'jwt-access',
+) {
     // TODO: include the injection of separate config
     constructor(private configService: ConfigService) {
         super({

@@ -13,6 +13,7 @@ import { UserPayloadDto } from '../user/dto/user-payload.dto';
 import { JwtTokensDto } from './dto/jwt-tokens.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { UserCreateDto } from '../user/dto/user-create.dto';
+import { TokenHelper } from '../../common/helpers/token.helper';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,7 @@ export class AuthService {
         private userService: UserService,
         private jwtService: JwtService,
         private configService: ConfigService,
+        private tokenHelper: TokenHelper,
     ) {}
 
     async login(
@@ -46,7 +48,6 @@ export class AuthService {
     }
     async register(input: UserCreateDto) {
         await this.userService.checkIfUserExistsBeforeReg([
-            { name: input.name },
             input.nickname && { nickname: input.nickname },
             { emailAddress: input.emailAddress },
         ]);
@@ -63,21 +64,22 @@ export class AuthService {
 
         await this.userService.createUser({ ...rest, password: hashedPw });
     }
-    private async generateTokens(user: UserPayloadDto): Promise<JwtTokensDto> {
-        const accessToken = await this.jwtService.signAsync(
-            { sub: user },
-            {
-                secret: this.configService.get('ACCESS_TOKEN_SECRET'),
-                expiresIn: this.configService.get('ACCESS_TOKEN_EXPIRES_IN'),
-            },
-        );
-        const refreshToken = await this.jwtService.signAsync(
-            { sub: user },
-            {
-                secret: this.configService.get('REFRESH_TOKEN_SECRET'),
-                expiresIn: this.configService.get('REFRESH_TOKEN_EXPIRES_IN'),
-            },
-        );
+    async refresh(userId: number): Promise<AuthResponseDto> {
+        const user = await this.userService.getUserById(userId);
+        const payload = plainToInstance(UserPayloadDto, user, {
+            excludeExtraneousValues: true,
+        });
+
+        const tokens = await this.generateTokens(payload);
+
+        return { user: payload, tokens };
+    }
+    private async generateTokens(
+        payload: UserPayloadDto,
+    ): Promise<JwtTokensDto> {
+        const accessToken = await this.tokenHelper.generateAccessToken(payload);
+        const refreshToken =
+            await this.tokenHelper.generateRefreshToken(payload);
 
         return { accessToken, refreshToken };
     }
