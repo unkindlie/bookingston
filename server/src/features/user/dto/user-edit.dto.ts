@@ -6,7 +6,6 @@ import {
     MaxLength,
 } from 'class-validator';
 
-// TODO: do the DTO
 export class UserEditDto {
     @IsNumber()
     @IsPositive()

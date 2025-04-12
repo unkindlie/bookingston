@@ -4,6 +4,7 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import { hash } from 'bcrypt';
+import { isEmail } from 'class-validator';
 
 import { UserRepository } from './user.repository';
 import { UserEntity } from './user.entity';
@@ -26,10 +27,16 @@ export class UserService {
             nickname: userNickname,
         });
     }
-    async getUserByEmail(emailAddress: string): Promise<UserEntity> {
-        return await this.userRepo.getUserByCondition({
-            emailAddress,
-        });
+    async getUserByEmailOrNickname(emailOrNick: string): Promise<UserEntity> {
+        const isStringEmail = isEmail(emailOrNick);
+
+        return await this.userRepo.getUserByCondition(
+            isStringEmail
+                ? {
+                      emailAddress: emailOrNick,
+                  }
+                : { nickname: emailOrNick },
+        );
     }
     async createUser(input: UserCreateDto): Promise<void> {
         const exists = await this.userRepo.checkIfUserExists([

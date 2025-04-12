@@ -13,12 +13,12 @@ import { UserPayloadDto } from '../user/dto/user-payload.dto';
 export class AuthService {
     constructor(private userService: UserService) {}
 
-    // TODO: add email or name check
     async validateUser(
         emailAddress: string,
         password: string,
     ): Promise<UserPayloadDto> {
-        const user = await this.userService.getUserByEmail(emailAddress);
+        const user =
+            await this.userService.getUserByEmailOrNickname(emailAddress);
         if (!user) {
             throw new UnauthorizedException('User not found');
         }
