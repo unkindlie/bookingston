@@ -3,14 +3,13 @@ import {
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
-import { hash } from 'bcrypt';
 import { isEmail } from 'class-validator';
 
 import { UserRepository } from './user.repository';
 import { UserEntity } from './user.entity';
-import { UserCreateDto } from './dto/user-create.dto';
 import { PaginationDto } from '../../common/util/dto/pagingation.dto';
 import { UserEditDto } from './dto/user-edit.dto';
+import { UserCreateDto } from './dto/user-create.dto';
 
 @Injectable()
 export class UserService {
@@ -22,45 +21,18 @@ export class UserService {
     async getUserById(id: number): Promise<UserEntity> {
         return await this.userRepo.getUserByCondition({ id });
     }
-    async getUserByNickname(userNickname: string): Promise<UserEntity> {
-        return await this.userRepo.getUserByCondition({
-            nickname: userNickname,
-        });
+    async getUserByNickname(nickname: string): Promise<UserEntity> {
+        return await this.userRepo.getUserByCondition({ nickname });
     }
     async getUserByEmailOrNickname(emailOrNick: string): Promise<UserEntity> {
         const isStringEmail = isEmail(emailOrNick);
 
-        return await this.userRepo.getUserByCondition(
-            isStringEmail
-                ? {
-                      emailAddress: emailOrNick,
-                  }
-                : { nickname: emailOrNick },
-        );
+        return await this.userRepo.getUserByCondition({
+            [isStringEmail ? 'emailAddress' : 'nickname']: emailOrNick,
+        });
     }
     async createUser(input: UserCreateDto): Promise<void> {
-        const exists = await this.userRepo.checkIfUserExists([
-            { name: input.name },
-            input.nickname && { nickname: input.nickname },
-            { emailAddress: input.emailAddress },
-        ]);
-        if (exists) {
-            throw new ConflictException(
-                'User with such information already exists',
-            );
-        }
-
-        const { password, ...rest } = input;
-        const hashedPw = await hash(password, 3);
-
-        // TODO: at this point I still need to think about generating nickname on frontend
-        if (!rest.nickname) {
-            rest.nickname =
-                input.name.toLowerCase().replaceAll(' ', '') +
-                Math.floor(Math.random() * 1000000);
-        }
-
-        await this.userRepo.createUser({ ...rest, password: hashedPw });
+        await this.userRepo.createUser(input);
     }
     async editUserInfo(input: UserEditDto) {
         await this.userRepo.editUserInfo(input);
@@ -72,5 +44,17 @@ export class UserService {
         }
 
         await this.userRepo.deleteUser(id);
+    }
+    async checkIfUserExistsBeforeReg(
+        options: Record<string, unknown> | Array<Record<string, unknown>>,
+    ) {
+        const exists = await this.userRepo.checkIfUserExists(options);
+        if (exists) {
+            throw new ConflictException(
+                'User with such information already exists',
+            );
+        }
+
+        return;
     }
 }

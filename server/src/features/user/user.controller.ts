@@ -3,18 +3,14 @@ import {
     Controller,
     Delete,
     Get,
-    HttpCode,
-    HttpStatus,
     Param,
     ParseIntPipe,
     Patch,
-    Post,
     Query,
     ValidationPipe,
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
-import { UserCreateDto } from './dto/user-create.dto';
 import { UserEntity } from './user.entity';
 import { ExposingSerialization } from '../../common/decorators/exposing-serialization.decorator';
 import { UserShortDto } from './dto/user-short.dto';
@@ -55,14 +51,6 @@ export class UserController {
         @Param('nick') nickname: string,
     ): Promise<UserEntity> {
         return await this.service.getUserByNickname(nickname);
-    }
-
-    @HttpCode(HttpStatus.CREATED)
-    @Post()
-    async createUser(@Body() body: UserCreateDto): Promise<MessageResponse> {
-        await this.service.createUser(body);
-
-        return { message: 'User created successfully' };
     }
 
     @Patch('edit-info')
