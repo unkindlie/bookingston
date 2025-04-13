@@ -7,6 +7,7 @@ import {
     ParseIntPipe,
     Patch,
     Query,
+    UseGuards,
     ValidationPipe,
 } from '@nestjs/common';
 
@@ -19,10 +20,13 @@ import { PaginatedDataDto } from '../../common/util/dto/paginated-data.dto';
 import { UserDetailedDto } from './dto/user-detailed.dto';
 import { MessageResponse } from '../../common/util/types/types';
 import { UserEditDto } from './dto/user-edit.dto';
+import { AccessTokenGuard } from '../../common/guards/access-token.guard';
+import { Public } from '../../common/decorators/public.decorator';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PaginatedUserShortItems = new (PaginatedDataDto(UserShortDto))();
 
+@UseGuards(AccessTokenGuard)
 @Controller('users')
 export class UserController {
     constructor(private service: UserService) {}
@@ -38,6 +42,7 @@ export class UserController {
     }
 
     @ExposingSerialization(UserDetailedDto)
+    @Public()
     @Get(':id')
     async getUserById(
         @Param('id', ParseIntPipe) id: number,
