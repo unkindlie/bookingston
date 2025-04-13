@@ -9,9 +9,10 @@ import { AccessTokenStrategy } from '../../common/strategies/access-token.strate
 import { CookieHelper } from '../../common/helpers/cookie.helper';
 import { TokenHelper } from '../../common/helpers/token.helper';
 import { RefreshTokenStragegy } from '../../common/strategies/refresh-token.strategy';
+import { RefreshTokenModule } from '../refresh-token/refresh-token.module';
 
 @Module({
-    imports: [UserModule, JwtModule.register({})],
+    imports: [UserModule, RefreshTokenModule, JwtModule.register({})],
     controllers: [AuthController],
     providers: [
         AuthService,

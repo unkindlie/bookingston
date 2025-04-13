@@ -3,8 +3,6 @@ import {
     Injectable,
     UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { compare, hash } from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
 
@@ -14,13 +12,13 @@ import { JwtTokensDto } from './dto/jwt-tokens.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { UserCreateDto } from '../user/dto/user-create.dto';
 import { TokenHelper } from '../../common/helpers/token.helper';
+import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private userService: UserService,
-        private jwtService: JwtService,
-        private configService: ConfigService,
+        private refreshTokenService: RefreshTokenService,
         private tokenHelper: TokenHelper,
     ) {}
 
@@ -39,10 +37,18 @@ export class AuthService {
             throw new ForbiddenException('Invalid password');
         }
 
+        // TODO: need to think on proper implementation of this feature
+        await this.refreshTokenService.checkForTokensAmount(user.id);
+
         const payload = plainToInstance(UserPayloadDto, user, {
             excludeExtraneousValues: true,
         });
         const tokens = await this.generateTokens(payload);
+
+        await this.refreshTokenService.saveToken({
+            token: tokens.refreshToken,
+            userId: user.id,
+        });
 
         return { user: payload, tokens };
     }
@@ -64,13 +70,21 @@ export class AuthService {
 
         await this.userService.createUser({ ...rest, password: hashedPw });
     }
-    async refresh(userId: number): Promise<AuthResponseDto> {
+    async refresh(oldToken: string, userId: number): Promise<AuthResponseDto> {
         const user = await this.userService.getUserById(userId);
+
+        await this.refreshTokenService.checkForTokensAmount(userId);
+
         const payload = plainToInstance(UserPayloadDto, user, {
             excludeExtraneousValues: true,
         });
 
         const tokens = await this.generateTokens(payload);
+
+        await this.refreshTokenService.updateToken(
+            oldToken,
+            tokens.refreshToken,
+        );
 
         return { user: payload, tokens };
     }

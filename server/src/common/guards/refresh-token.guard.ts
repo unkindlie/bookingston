@@ -9,6 +9,7 @@ export class RefreshTokenGuard extends AuthGuard('jwt-refresh') {
         super();
     }
 
+    // TODO: add constant for string
     canActivate(
         context: ExecutionContext,
     ): boolean | Promise<boolean> | Observable<boolean> {
