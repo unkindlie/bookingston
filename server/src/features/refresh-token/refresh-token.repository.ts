@@ -49,6 +49,9 @@ export class RefreshTokenRepository {
 
         await this.tokenRepo.remove(entity);
     }
+    async checkIfTokenAvailable(token: string): Promise<boolean> {
+        return await this.tokenRepo.existsBy({ token });
+    }
     async checkForTokensAmount(userId: number): Promise<void> {
         const tokensCount = await this.tokenRepo.countBy({
             user: { id: userId },

@@ -20,11 +20,14 @@ import { User } from '../../common/decorators/user.decorator';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { UserPayloadDto } from '../user/dto/user-payload.dto';
 import { RefreshTokenGuard } from '../../common/guards/refresh-token.guard';
+import { GuestOnlyGuard } from '../../common/guards/guest-only.guard';
+import { OptionalJwtGuard } from '../../common/guards/optional-jwt.guard';
 
 @Controller('auth')
 export class AuthController {
     constructor(private service: AuthService) {}
 
+    @UseGuards(OptionalJwtGuard, GuestOnlyGuard)
     @HttpCode(HttpStatus.CREATED)
     @Post('register')
     async createUser(@Body() body: UserCreateDto): Promise<MessageResponse> {
@@ -34,7 +37,7 @@ export class AuthController {
     }
 
     @UseInterceptors(RefreshCookieInterceptor)
-    @UseGuards(LocalAuthGuard)
+    @UseGuards(OptionalJwtGuard, GuestOnlyGuard, LocalAuthGuard)
     @Post('login')
     async login(@User() user: AuthResponseDto) {
         return user;
@@ -46,6 +49,7 @@ export class AuthController {
         return user;
     }
 
+    @UseGuards(AccessTokenGuard)
     @UseInterceptors(ClearRefreshCookieInterceptor)
     @Post('logout')
     logout(): MessageResponse {

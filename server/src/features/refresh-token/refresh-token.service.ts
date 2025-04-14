@@ -16,6 +16,9 @@ export class RefreshTokenService {
     async removeToken(token: string): Promise<void> {
         await this.repository.removeToken(token);
     }
+    async checkIfTokenAvailable(token: string): Promise<boolean> {
+        return await this.repository.checkIfTokenAvailable(token);
+    }
     async checkForTokensAmount(userId: number): Promise<void> {
         await this.repository.checkForTokensAmount(userId);
     }

@@ -52,7 +52,7 @@ export class AuthService {
 
         return { user: payload, tokens };
     }
-    async register(input: UserCreateDto) {
+    async register(input: UserCreateDto): Promise<void> {
         await this.userService.checkIfUserExistsBeforeReg([
             input.nickname && { nickname: input.nickname },
             { emailAddress: input.emailAddress },
@@ -74,6 +74,14 @@ export class AuthService {
         const user = await this.userService.getUserById(userId);
 
         await this.refreshTokenService.checkForTokensAmount(userId);
+
+        const oldTokenExists =
+            await this.refreshTokenService.checkIfTokenAvailable(oldToken);
+        if (!oldTokenExists) {
+            throw new ForbiddenException(
+                "Such token doesn't exist in the database",
+            );
+        }
 
         const payload = plainToInstance(UserPayloadDto, user, {
             excludeExtraneousValues: true,
