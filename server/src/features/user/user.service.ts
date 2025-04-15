@@ -1,8 +1,4 @@
-import {
-    ConflictException,
-    Injectable,
-    NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { isEmail } from 'class-validator';
 
 import { UserRepository } from './user.repository';
@@ -45,16 +41,9 @@ export class UserService {
 
         await this.userRepo.deleteUser(id);
     }
-    async checkIfUserExistsBeforeReg(
+    async checkIfUserExists(
         options: Record<string, unknown> | Array<Record<string, unknown>>,
     ) {
-        const exists = await this.userRepo.checkIfUserExists(options);
-        if (exists) {
-            throw new ConflictException(
-                'User with such information already exists',
-            );
-        }
-
-        return;
+        return await this.userRepo.checkIfUserExists(options);
     }
 }

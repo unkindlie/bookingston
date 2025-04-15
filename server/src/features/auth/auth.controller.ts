@@ -9,19 +9,20 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 
-import { LocalAuthGuard } from '../../common/guards/local-auth.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 import { UserCreateDto } from '../user/dto/user-create.dto';
 import { MessageResponse } from '../../common/util/types/types';
 import { AuthService } from './auth.service';
-import { AccessTokenGuard } from '../../common/guards/access-token.guard';
+import { AccessTokenGuard } from './guards/access-token.guard';
 import { RefreshCookieInterceptor } from '../../common/interceptors/refresh-cookie.interceptor';
 import { ClearRefreshCookieInterceptor } from '../../common/interceptors/clear-refresh-cookie.interceptor';
 import { User } from '../../common/decorators/user.decorator';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { UserPayloadDto } from '../user/dto/user-payload.dto';
-import { RefreshTokenGuard } from '../../common/guards/refresh-token.guard';
-import { GuestOnlyGuard } from '../../common/guards/guest-only.guard';
-import { OptionalJwtGuard } from '../../common/guards/optional-jwt.guard';
+import { RefreshTokenGuard } from './guards/refresh-token.guard';
+import { GuestOnlyGuard } from './guards/guest-only.guard';
+import { OptionalJwtGuard } from './guards/optional-jwt.guard';
+import { GoogleGuard } from './guards/google.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -60,6 +61,16 @@ export class AuthController {
     @UseGuards(RefreshTokenGuard)
     @Get('refresh')
     async refresh(@User() user: AuthResponseDto) {
+        return user;
+    }
+
+    @UseGuards(GoogleGuard)
+    @Get('google/login')
+    googleLogin() {}
+
+    @UseGuards(GoogleGuard)
+    @Get('google/callback')
+    googleCallback(@User() user: any) {
         return user;
     }
 }

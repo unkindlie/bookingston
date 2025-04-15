@@ -20,7 +20,7 @@ import { PaginatedDataDto } from '../../common/util/dto/paginated-data.dto';
 import { UserDetailedDto } from './dto/user-detailed.dto';
 import { MessageResponse } from '../../common/util/types/types';
 import { UserEditDto } from './dto/user-edit.dto';
-import { AccessTokenGuard } from '../../common/guards/access-token.guard';
+import { AccessTokenGuard } from '../auth/guards/access-token.guard';
 import { Public } from '../../common/decorators/public.decorator';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

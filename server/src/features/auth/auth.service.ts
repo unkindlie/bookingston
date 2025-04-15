@@ -1,7 +1,7 @@
 import {
+    ConflictException,
     ForbiddenException,
     Injectable,
-    UnauthorizedException,
 } from '@nestjs/common';
 import { compare, hash } from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
@@ -13,7 +13,9 @@ import { AuthResponseDto } from './dto/auth-response.dto';
 import { UserCreateDto } from '../user/dto/user-create.dto';
 import { TokenHelper } from '../../common/helpers/token.helper';
 import { RefreshTokenService } from '../refresh-token/refresh-token.service';
+import { generateNickname } from './helpers/generate-nickname.helper';
 
+// TODO: refactor this shit
 @Injectable()
 export class AuthService {
     constructor(
@@ -28,14 +30,9 @@ export class AuthService {
     ): Promise<AuthResponseDto> {
         const user =
             await this.userService.getUserByEmailOrNickname(emailAddress);
-        if (!user) {
-            throw new UnauthorizedException('User not found');
-        }
 
         const isPasswordEqual = await compare(password, user.password);
-        if (!isPasswordEqual) {
-            throw new ForbiddenException('Invalid password');
-        }
+        if (!isPasswordEqual) throw new ForbiddenException('Invalid password');
 
         // TODO: need to think on proper implementation of this feature
         await this.refreshTokenService.checkForTokensAmount(user.id);
@@ -53,20 +50,18 @@ export class AuthService {
         return { user: payload, tokens };
     }
     async register(input: UserCreateDto): Promise<void> {
-        await this.userService.checkIfUserExistsBeforeReg([
+        const userExists = await this.userService.checkIfUserExists([
             input.nickname && { nickname: input.nickname },
             { emailAddress: input.emailAddress },
         ]);
+
+        if (userExists) throw new ConflictException('Such user already exists');
 
         const { password, ...rest } = input;
         const hashedPw = await hash(password, 3);
 
         // TODO: at this point I still need to think about generating nickname on frontend
-        if (!rest.nickname) {
-            rest.nickname =
-                input.name.toLowerCase().replaceAll(' ', '') +
-                Math.floor(Math.random() * 1000000);
-        }
+        if (!rest.nickname) rest.nickname = generateNickname(rest.name);
 
         await this.userService.createUser({ ...rest, password: hashedPw });
     }
@@ -95,6 +90,29 @@ export class AuthService {
         );
 
         return { user: payload, tokens };
+    }
+    async validateExternalUser(externalUser: UserCreateDto) {
+        const userExists = await this.userService.checkIfUserExists({
+            emailAddress: externalUser.emailAddress,
+        });
+        const getUser = async (): Promise<AuthResponseDto> => {
+            const user = await this.userService.getUserByEmailOrNickname(
+                externalUser.emailAddress,
+            );
+
+            const payload = plainToInstance(UserPayloadDto, user, {
+                excludeExtraneousValues: true,
+            });
+            const tokens = await this.generateTokens(payload);
+
+            return { user: payload, tokens };
+        };
+
+        if (userExists) return await getUser();
+
+        await this.userService.createUser(externalUser);
+
+        return await getUser();
     }
     private async generateTokens(
         payload: UserPayloadDto,

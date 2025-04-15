@@ -5,8 +5,8 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 
 import { RefreshCookieExtractor } from '../extractors/refresh-token.extractor';
-import { UserPayloadDto } from '../../features/user/dto/user-payload.dto';
-import { AuthService } from '../../features/auth/auth.service';
+import { UserPayloadDto } from '../../user/dto/user-payload.dto';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class RefreshTokenStragegy extends PassportStrategy(
