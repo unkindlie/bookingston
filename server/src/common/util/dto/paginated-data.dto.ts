@@ -4,7 +4,7 @@ export function PaginatedDataDto<T>(cls: new () => T) {
     class Cls {
         @Expose()
         @Type(() => cls)
-        data: T[];
+        items: T[];
 
         @Expose()
         page: number;

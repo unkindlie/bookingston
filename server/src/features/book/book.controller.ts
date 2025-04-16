@@ -38,8 +38,8 @@ export class BookController {
         @Query(new ValidationPipe({ skipMissingProperties: false }))
         search: BookSearchDto,
     ) {
-        const data = await this.service.getBooks(search);
-        return { data, ...search };
+        const items = await this.service.getBooks(search);
+        return { items, ...search };
     }
 
     @ExposingSerialization(BookDetailedDto)

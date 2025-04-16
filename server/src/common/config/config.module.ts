@@ -14,6 +14,7 @@ import supabaseConfig from '../supabase/supabase.config';
                 process.env.NODE_ENV != 'production' && '.env.development',
                 '.env.production',
             ],
+            isGlobal: true,
         }),
     ],
 })
