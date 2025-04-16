@@ -60,7 +60,6 @@ export class AuthService {
         const { password, ...rest } = input;
         const hashedPw = await hash(password, 3);
 
-        // TODO: at this point I still need to think about generating nickname on frontend
         if (!rest.nickname) rest.nickname = generateNickname(rest.name);
 
         await this.userService.createUser({ ...rest, password: hashedPw });
@@ -72,11 +71,10 @@ export class AuthService {
 
         const oldTokenExists =
             await this.refreshTokenService.checkIfTokenAvailable(oldToken);
-        if (!oldTokenExists) {
+        if (!oldTokenExists)
             throw new ForbiddenException(
                 "Such token doesn't exist in the database",
             );
-        }
 
         const payload = plainToInstance(UserPayloadDto, user, {
             excludeExtraneousValues: true,
@@ -111,7 +109,6 @@ export class AuthService {
         if (userExists) return await getUser();
 
         await this.userService.createUser(externalUser);
-
         return await getUser();
     }
     private async generateTokens(

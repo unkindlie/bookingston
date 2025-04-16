@@ -1,5 +1,7 @@
 import { Expose } from 'class-transformer';
 
+import { Role } from '../enums/role.enum';
+
 export class UserPayloadDto {
     @Expose()
     id: number;
@@ -12,4 +14,7 @@ export class UserPayloadDto {
 
     @Expose()
     emailAddress: string;
+
+    @Expose()
+    roles: Role[];
 }

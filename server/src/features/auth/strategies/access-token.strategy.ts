@@ -19,6 +19,6 @@ export class AccessTokenStrategy extends PassportStrategy(
     }
 
     validate(payload: { sub: UserPayloadDto }) {
-        return { user: payload.sub };
+        return payload.sub;
     }
 }

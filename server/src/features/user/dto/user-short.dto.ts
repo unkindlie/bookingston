@@ -1,5 +1,7 @@
 import { Expose } from 'class-transformer';
 
+import { Role } from '../enums/role.enum';
+
 export class UserShortDto {
     @Expose()
     id: number;
@@ -9,4 +11,7 @@ export class UserShortDto {
 
     @Expose()
     nickname: string;
+
+    @Expose()
+    roles: Role[];
 }

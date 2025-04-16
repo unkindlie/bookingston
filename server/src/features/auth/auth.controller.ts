@@ -20,15 +20,15 @@ import { User } from '../../common/decorators/user.decorator';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { UserPayloadDto } from '../user/dto/user-payload.dto';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
-import { GuestOnlyGuard } from './guards/guest-only.guard';
-import { OptionalJwtGuard } from './guards/optional-jwt.guard';
 import { GoogleGuard } from './guards/google.guard';
+import { Roles } from './decorators/roles.decorator';
+import { Role } from '../user/enums/role.enum';
+import { RoleGuard } from './guards/role.guard';
 
 @Controller('auth')
 export class AuthController {
     constructor(private service: AuthService) {}
 
-    @UseGuards(OptionalJwtGuard, GuestOnlyGuard)
     @HttpCode(HttpStatus.CREATED)
     @Post('register')
     async createUser(@Body() body: UserCreateDto): Promise<MessageResponse> {
@@ -38,7 +38,7 @@ export class AuthController {
     }
 
     @UseInterceptors(RefreshCookieInterceptor)
-    @UseGuards(OptionalJwtGuard, GuestOnlyGuard, LocalAuthGuard)
+    @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@User() user: AuthResponseDto) {
         return user;
@@ -72,5 +72,12 @@ export class AuthController {
     @Get('google/callback')
     googleCallback(@User() user: any) {
         return user;
+    }
+
+    @Roles(Role.EDITOR, Role.ADMIN)
+    @UseGuards(AccessTokenGuard, RoleGuard)
+    @Get('role-test')
+    roleRoute() {
+        return { message: 'Working' };
     }
 }
