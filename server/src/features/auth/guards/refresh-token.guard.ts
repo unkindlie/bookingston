@@ -1,24 +1,7 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Observable } from 'rxjs';
+
+import { JWT_REFRESH_KEY } from '../constants/auth.constants';
 
 @Injectable()
-export class RefreshTokenGuard extends AuthGuard('jwt-refresh') {
-    constructor(private reflector: Reflector) {
-        super();
-    }
-
-    // TODO: add constant for string
-    canActivate(
-        context: ExecutionContext,
-    ): boolean | Promise<boolean> | Observable<boolean> {
-        const isPublic = this.reflector.getAllAndOverride('isPublic', [
-            context.getClass(),
-            context.getHandler(),
-        ]);
-        if (isPublic) return true;
-
-        return super.canActivate(context);
-    }
-}
+export class RefreshTokenGuard extends AuthGuard(JWT_REFRESH_KEY) {}

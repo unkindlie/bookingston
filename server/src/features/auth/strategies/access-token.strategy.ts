@@ -1,20 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { UserPayloadDto } from '../../user/dto/user-payload.dto';
+import { JWT_ACCESS_KEY } from '../constants/auth.constants';
+import accessTokenConfig from '../config/access-token.config';
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(
     Strategy,
-    'jwt-access',
+    JWT_ACCESS_KEY,
 ) {
-    // TODO: include the injection of separate config
-    constructor(private configService: ConfigService) {
+    constructor(
+        @Inject(accessTokenConfig.KEY)
+        private config: ConfigType<typeof accessTokenConfig>,
+    ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: configService.get('ACCESS_TOKEN_SECRET'),
+            secretOrKey: config.secret,
         });
     }
 

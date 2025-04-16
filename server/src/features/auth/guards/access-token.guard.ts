@@ -3,8 +3,10 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 
+import { IS_PUBLIC_KEY, JWT_ACCESS_KEY } from '../constants/auth.constants';
+
 @Injectable()
-export class AccessTokenGuard extends AuthGuard('jwt-access') {
+export class AccessTokenGuard extends AuthGuard(JWT_ACCESS_KEY) {
     constructor(private reflector: Reflector) {
         super();
     }
@@ -12,7 +14,7 @@ export class AccessTokenGuard extends AuthGuard('jwt-access') {
     canActivate(
         context: ExecutionContext,
     ): boolean | Promise<boolean> | Observable<boolean> {
-        const isPublic = this.reflector.getAllAndOverride('isPublic', [
+        const isPublic = this.reflector.getAllAndOverride(IS_PUBLIC_KEY, [
             context.getClass(),
             context.getHandler(),
         ]);

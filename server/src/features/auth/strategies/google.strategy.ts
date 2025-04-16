@@ -5,7 +5,7 @@ import { ConfigType } from '@nestjs/config';
 
 import { AuthService } from '../auth.service';
 import { generateNickname } from '../helpers/generate-nickname.helper';
-import googleOauthConfig from '../../../common/config/google-oauth.config';
+import googleOauthConfig from '../config/google-oauth.config';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {

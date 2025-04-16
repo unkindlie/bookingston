@@ -7,8 +7,9 @@ import {
 import { Observable, map } from 'rxjs';
 import { Response } from 'express';
 
-import { CookieHelper } from '../helpers/cookie.helper';
-import { AuthResponseDto } from '../../features/auth/dto/auth-response.dto';
+import { CookieHelper } from '../../../common/helpers/cookie.helper';
+import { AuthResponseDto } from '../dto/auth-response.dto';
+import { REFRESH_TOKEN_KEY } from '../constants/auth.constants';
 
 @Injectable()
 export class RefreshCookieInterceptor implements NestInterceptor {
@@ -25,7 +26,11 @@ export class RefreshCookieInterceptor implements NestInterceptor {
                     tokens: { refreshToken },
                 } = data;
 
-                this.cookieHelper.setCookie('refreshToken', refreshToken, res);
+                this.cookieHelper.setCookie(
+                    REFRESH_TOKEN_KEY,
+                    refreshToken,
+                    res,
+                );
 
                 return data;
             }),

@@ -6,8 +6,10 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { delayWhen, Observable } from 'rxjs';
-import { CookieHelper } from '../helpers/cookie.helper';
-import { RefreshTokenService } from '../../features/refresh-token/refresh-token.service';
+
+import { CookieHelper } from '../../../common/helpers/cookie.helper';
+import { RefreshTokenService } from '../../refresh-token/refresh-token.service';
+import { REFRESH_TOKEN_KEY } from '../constants/auth.constants';
 
 @Injectable()
 export class ClearRefreshCookieInterceptor implements NestInterceptor {
@@ -28,8 +30,8 @@ export class ClearRefreshCookieInterceptor implements NestInterceptor {
                     .getRequest<Request>().cookies;
 
                 await this.refreshTokenService.removeToken(refreshToken);
-                // TODO: add constant for token
-                this.cookieHelper.clearCookie('refreshToken', res);
+
+                this.cookieHelper.clearCookie(REFRESH_TOKEN_KEY, res);
             }),
         );
     }

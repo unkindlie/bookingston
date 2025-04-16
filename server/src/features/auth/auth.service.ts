@@ -11,11 +11,11 @@ import { UserPayloadDto } from '../user/dto/user-payload.dto';
 import { JwtTokensDto } from './dto/jwt-tokens.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { UserCreateDto } from '../user/dto/user-create.dto';
-import { TokenHelper } from '../../common/helpers/token.helper';
+import { TokenHelper } from './helpers/token.helper';
 import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 import { generateNickname } from './helpers/generate-nickname.helper';
+import { UserEntity } from '../user/user.entity';
 
-// TODO: refactor this shit
 @Injectable()
 export class AuthService {
     constructor(
@@ -34,20 +34,16 @@ export class AuthService {
         const isPasswordEqual = await compare(password, user.password);
         if (!isPasswordEqual) throw new ForbiddenException('Invalid password');
 
-        // TODO: need to think on proper implementation of this feature
         await this.refreshTokenService.checkForTokensAmount(user.id);
 
-        const payload = plainToInstance(UserPayloadDto, user, {
-            excludeExtraneousValues: true,
-        });
-        const tokens = await this.generateTokens(payload);
+        const data = await this.returnPayloadWithTokens(user);
 
         await this.refreshTokenService.saveToken({
-            token: tokens.refreshToken,
+            token: data.tokens.refreshToken,
             userId: user.id,
         });
 
-        return { user: payload, tokens };
+        return data;
     }
     async register(input: UserCreateDto): Promise<void> {
         const userExists = await this.userService.checkIfUserExists([
@@ -67,8 +63,6 @@ export class AuthService {
     async refresh(oldToken: string, userId: number): Promise<AuthResponseDto> {
         const user = await this.userService.getUserById(userId);
 
-        await this.refreshTokenService.checkForTokensAmount(userId);
-
         const oldTokenExists =
             await this.refreshTokenService.checkIfTokenAvailable(oldToken);
         if (!oldTokenExists)
@@ -76,40 +70,40 @@ export class AuthService {
                 "Such token doesn't exist in the database",
             );
 
-        const payload = plainToInstance(UserPayloadDto, user, {
-            excludeExtraneousValues: true,
-        });
-
-        const tokens = await this.generateTokens(payload);
+        const data = await this.returnPayloadWithTokens(user);
 
         await this.refreshTokenService.updateToken(
             oldToken,
-            tokens.refreshToken,
+            data.tokens.refreshToken,
         );
 
-        return { user: payload, tokens };
+        return data;
     }
     async validateExternalUser(externalUser: UserCreateDto) {
         const userExists = await this.userService.checkIfUserExists({
             emailAddress: externalUser.emailAddress,
         });
         const getUser = async (): Promise<AuthResponseDto> => {
-            const user = await this.userService.getUserByEmailOrNickname(
-                externalUser.emailAddress,
-            );
-
-            const payload = plainToInstance(UserPayloadDto, user, {
-                excludeExtraneousValues: true,
-            });
-            const tokens = await this.generateTokens(payload);
-
-            return { user: payload, tokens };
+            return this.userService
+                .getUserByEmailOrNickname(externalUser.emailAddress)
+                .then((user) => this.returnPayloadWithTokens(user));
         };
 
         if (userExists) return await getUser();
 
         await this.userService.createUser(externalUser);
         return await getUser();
+    }
+
+    private async returnPayloadWithTokens(
+        user: UserEntity,
+    ): Promise<AuthResponseDto> {
+        const payload = plainToInstance(UserPayloadDto, user, {
+            excludeExtraneousValues: true,
+        });
+        const tokens = await this.generateTokens(payload);
+
+        return { user: payload, tokens };
     }
     private async generateTokens(
         payload: UserPayloadDto,

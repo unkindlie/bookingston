@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { RefreshTokenEntity } from './refresh-token.entity';
 import { RefreshTokenUploadDto } from './dto/refresh-token-upload.dto';
+import { MAX_TOKENS_PER_USER } from './constants/refresh-token.constants';
 
 @Injectable()
 export class RefreshTokenRepository {
@@ -56,10 +57,9 @@ export class RefreshTokenRepository {
         const tokensCount = await this.tokenRepo.countBy({
             user: { id: userId },
         });
-        // TODO: add a constant for the amount
-        if (tokensCount == 3) {
-            // TODO: think on exception cause
-            throw new ForbiddenException('Too much sessions made');
+
+        if (tokensCount == MAX_TOKENS_PER_USER) {
+            throw new ForbiddenException('You have too much active tokens');
         }
     }
 }
