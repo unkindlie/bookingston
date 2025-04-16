@@ -1,13 +1,15 @@
 .mainSector {
-    min-height: 100vh;
-
     display: flex;
+
+    flex: 1;
     flex-direction: column;
 
     justify-content: center;
     align-items: center;
 
     gap: 20;
+
+    background-color: bisque;
 }
 
 .link {

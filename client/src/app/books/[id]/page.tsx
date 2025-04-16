@@ -15,7 +15,7 @@ export const generateMetadata = async ({
     params: Promise<{ id: string }>;
 }) => {
     const { id } = await params;
-    const book = await fetchFunc(id);
+    const book = await fetchFunc(id).then((d) => d.data);
 
     return {
         title: book.name,

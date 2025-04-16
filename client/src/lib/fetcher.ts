@@ -1,13 +1,16 @@
+import { TError } from '../../utils/types/default/error-response.type';
+import { TResponse } from '../../utils/types/default/response.type';
+
 const BASE_URL = process.env.API_URL;
 
 export async function fetcher<T>(
     endpoint: string,
     options?: RequestInit,
-): Promise<T> {
+): Promise<TResponse<T, null> | TResponse<null, TError>> {
     const res = await fetch(`${BASE_URL}${endpoint}`, options);
     if (!res.ok) {
-        throw new Error(`Error fetching data: ${BASE_URL}${endpoint}`);
+        return await res.json() as TResponse<null, TError>;
     }
 
-    return await res.json();
+    return await res.json() as TResponse<T, null>;
 }

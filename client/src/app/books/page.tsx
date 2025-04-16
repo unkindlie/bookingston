@@ -2,11 +2,11 @@ import Link from "next/link";
 
 import { TBookShort } from "../../../utils/types/book/book-short.type";
 import { fetcher } from "../../lib/fetcher";
-import { PagedResponse } from "../../../utils/types/default/paged-response";
+import { TPagedData } from "../../../utils/types/default/paged-response.type";
 import styles from "./styles.module.css";
 
 const BookPage = async () => {
-    const books = await fetcher<PagedResponse<TBookShort>>("/books", {
+    const books = await fetcher<TPagedData<TBookShort>>("/books", {
         cache: "no-store",
     });
 
@@ -14,7 +14,7 @@ const BookPage = async () => {
         <div className={styles.main}>
             <h1>Books page</h1>
             <div className={styles.booksContainer}>
-                {books.data.map((book) => (
+                {books.data?.items.map((book) => (
                     <Link key={book.id} href={`/books/${book.id}`}>
                         {book.name}
                     </Link>
