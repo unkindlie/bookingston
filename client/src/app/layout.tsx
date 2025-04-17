@@ -1,19 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Raleway } from "next/font/google";
 
 import { StoreProvider } from '../providers/store.provider';
 import { Container } from '../components/common/container/Container';
 import "./globals.css";
 
-const geistSans = Geist({
-    variable: "--font-geist-sans",
-    subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-    variable: "--font-geist-mono",
-    subsets: ["latin"],
-});
+const geologica = Raleway({
+    subsets: ['latin', 'cyrillic']
+})
 
 export const metadata: Metadata = {
     title: "Bookingston: Get books",
@@ -28,7 +22,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                className={`${geologica.className} antialiased`}
             >
                 <StoreProvider>
                     <Container>

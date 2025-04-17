@@ -3,7 +3,7 @@ import "./footer.styles.css";
 const Footer = () => {
     return (
         <footer>
-            <span>Hello</span>
+            <span>Привіт</span>
         </footer>
     );
 };

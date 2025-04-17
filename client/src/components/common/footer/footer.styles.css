@@ -1,6 +1,11 @@
 footer {
-    padding: 10px;
+    height: 10vh;
 
-    position: sticky;
-    top: 0px;
+    display: flex;
+    align-items: center;
+
+    color: white;
+    background-color: #256ab8;
+
+    padding: 0 2vw;
 }
