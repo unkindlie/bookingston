@@ -3,4 +3,5 @@ export type TBookShort = {
     name: string;
     price: number;
     quantity: number;
-}
+    imageUrl: string;
+};

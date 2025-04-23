@@ -1,7 +1,7 @@
 import { TError } from '../../utils/types/default/error-response.type';
 import { TResponse } from '../../utils/types/default/response.type';
 
-const BASE_URL = process.env.API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function fetcher<T>(
     endpoint: string,
