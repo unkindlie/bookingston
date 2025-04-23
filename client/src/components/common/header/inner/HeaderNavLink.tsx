@@ -7,8 +7,10 @@ type HeaderNavLinkProps = {
     href: string;
 };
 
-const HeaderNavLink = ({ text, href }: HeaderNavLinkProps) => {
-    return <Link className='nav-link' href={href}>{text}</Link>;
-};
+const HeaderNavLink = ({ text, href }: HeaderNavLinkProps) => (
+    <Link className="nav-link" href={href}>
+        {text}
+    </Link>
+);
 
 export { HeaderNavLink };

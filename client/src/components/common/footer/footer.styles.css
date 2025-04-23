@@ -8,4 +8,18 @@ footer {
     background-color: #256ab8;
 
     padding: 0 2vw;
+    gap: 0 1vw;
+}
+
+footer > span:nth-child(odd) {
+    font-weight: 600;
+}
+
+footer > span:nth-child(even) {
+    font-family: 'Planet Kosmos';
+    font-size: 2em;
+    
+    padding-top: 0.5vw;
+
+    user-select: none;
 }

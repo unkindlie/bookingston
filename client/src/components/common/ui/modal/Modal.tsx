@@ -2,8 +2,8 @@
 
 import { useCallback, MouseEvent } from "react";
 
-import "./Modal.styles.css";
 import { cnMerge } from "../../../../lib/clsx";
+import "./Modal.styles.css";
 
 type TModalProps = Partial<{
     open: boolean;

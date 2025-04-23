@@ -1,11 +1,10 @@
 import "./footer.styles.css";
 
-const Footer = () => {
-    return (
-        <footer>
-            <span>Привіт</span>
-        </footer>
-    );
-};
+const Footer = () => (
+    <footer>
+        <span>Автор проєкту: </span>
+        <span>unkindlie</span>
+    </footer>
+);
 
 export { Footer };
