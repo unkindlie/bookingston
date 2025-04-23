@@ -1,9 +1,29 @@
 header {
-    display: flex;
-    align-items: center;
-
     height: 11vh;
 
     padding: 0 2vw;
+
+    display: flex;
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.header-links {
+    align-items: center;
+}
+
+.header-links,
+.header-links > nav {
+    display: flex;
+
     gap: 0 2vw;
+}
+
+.header-buttons {
+    color: #1856da;
+}
+
+.header-buttons > svg {
+    cursor: pointer;
 }

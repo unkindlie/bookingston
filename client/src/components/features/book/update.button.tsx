@@ -1,7 +1,7 @@
 "use client";
 
 import { TBookEdit } from '../../../../utils/types/book/book-edit.type';
-import { revalidateBook } from "../../../lib/actions";
+import { revalidateBook } from "../../../lib/actions/post";
 import styles from "./update.button.module.css";
 
 type UpdateButtonProps = {
