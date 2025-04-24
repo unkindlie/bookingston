@@ -1,0 +1,10 @@
+input {
+    font-family: 'Raleway';
+
+    border-radius: 5px;
+    border-width: 2px;
+    border-color: #256ab8;
+    border-style: solid;
+
+    padding: 8px 10px;
+}

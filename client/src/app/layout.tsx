@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 
-import { StoreProvider } from '../providers/store.provider';
-import { Container } from '../components/common/container/Container';
+import { StoreProvider } from "../providers/store.provider";
+import { Container } from "../components/common/container/Container";
 import "./globals.css";
 
-const geologica = Raleway({
-    subsets: ['latin', 'cyrillic']
-})
+const raleway = Raleway({
+    subsets: ["latin", "cyrillic"],
+    display: "swap",
+});
 
 export const metadata: Metadata = {
     title: "Bookingston: Get books",
@@ -21,13 +22,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body
-                className={`${geologica.className} antialiased`}
-            >
+            <body className={`${raleway.className} antialiased`}>
                 <StoreProvider>
-                    <Container>
-                        {children}
-                    </Container>
+                    <Container>{children}</Container>
                 </StoreProvider>
             </body>
         </html>

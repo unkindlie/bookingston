@@ -4,11 +4,9 @@ import { TResponse } from "../../utils/types/default/response.type";
 import { TBookShort } from "../../utils/types/book/book-short.type";
 import { TPagedData } from "../../utils/types/default/paged-response.type";
 
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
-
 export const bookApi = createApi({
     reducerPath: "book",
-    baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_URL }),
     endpoints: (builder) => ({
         getBooks: builder.query<TResponse<TPagedData<TBookShort>>, void>({
             query: () => "books",

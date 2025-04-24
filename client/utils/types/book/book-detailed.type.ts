@@ -1,6 +1,6 @@
-export type TBookDetailed = {
-    id: string;
-    name: string;
+import { TBookBasic } from './book-basic.type';
+
+export type TBookDetailed = TBookBasic & {
     description: string | null;
     price: number;
     quantity: number;
