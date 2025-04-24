@@ -1,0 +1,10 @@
+.login-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px 0;
+}
+
+.login-form > input {
+    width: 300px;
+}

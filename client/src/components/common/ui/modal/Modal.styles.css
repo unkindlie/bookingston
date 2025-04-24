@@ -34,7 +34,11 @@
 
     border-radius: 7px;
 
-    padding: 1.5vh 2vw;
+    padding: 20px;
+}
+
+.modal > *:nth-last-child(1) {
+    margin-top: 10px;
 }
 
 .modal-title {

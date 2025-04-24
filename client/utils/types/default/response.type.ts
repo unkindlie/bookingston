@@ -1,5 +1,6 @@
-export type TResponse<T = unknown, E = unknown> = {
-    statusCode: number;
-    data: T | null;
-    error: E | null;
-}
+import { TError } from "./error-response.type";
+
+type TStatusCode = { statusCode: number };
+
+export type TResponse<T = unknown> = TStatusCode &
+    ({ data: T; error: null } | { data: null; error: TError });
