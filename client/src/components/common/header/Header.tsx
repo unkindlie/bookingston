@@ -6,7 +6,7 @@ import { HeaderLogo } from "./inner/HeaderLogo";
 import { HeaderNavLink } from "./inner/HeaderNavLink";
 import { Modal } from "../ui/modal/Modal";
 import { useModal } from "../../../hooks/use-modal";
-import { LoginForm } from '../../features/header/login-form/LoginForm';
+import { LoginForm } from "../../features/header/login-form/LoginForm";
 
 import "./Header.styles.css";
 
@@ -27,9 +27,11 @@ const Header = () => {
                     <RiUser3Fill size={24} onClick={invertOpen} />
                 </div>
             </header>
-            <Modal open={open} onClose={invertOpen} title="Авторизація">
-                <LoginForm />
-            </Modal>
+            {open && (
+                <Modal open={open} onClose={invertOpen} title="Авторизація">
+                    <LoginForm />
+                </Modal>
+            )}
         </>
     );
 };

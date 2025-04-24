@@ -1,8 +1,7 @@
 "use client";
 
-import { useCallback, MouseEvent } from "react";
+import { useCallback, MouseEvent, useRef, useEffect } from "react";
 
-import { cnMerge } from "../../../../lib/clsx";
 import "./Modal.styles.css";
 
 type TModalProps = Partial<{
@@ -13,20 +12,35 @@ type TModalProps = Partial<{
 }>;
 
 const Modal = ({ open, onClose, title, children }: TModalProps) => {
+    const ref = useRef<HTMLDivElement | null>(null);
     const handleClose = useCallback(
         (e: MouseEvent<HTMLDivElement>) => {
             if (e.target === e.currentTarget) {
-                onClose?.();
+                ref.current?.classList.replace(
+                    "modal-container",
+                    "modal-closed",
+                );
+                const timeout = setTimeout(() => onClose?.(), 300);
+                return () => clearTimeout(timeout);
             }
         },
         [onClose],
     );
 
+    useEffect(() => {
+        if (open) {
+            const timeout = setTimeout(() =>
+                ref.current?.classList.replace(
+                    "modal-closed",
+                    "modal-container",
+                ),
+            );
+            return () => clearTimeout(timeout);
+        }
+    }, [open]);
+
     return (
-        <div
-            className={cnMerge(open ? "modal-container" : "modal-closed")}
-            onClick={handleClose}
-        >
+        <div onClick={handleClose} ref={ref} className="modal-closed">
             <div className="modal">
                 <span className="modal-title">{title}</span>
                 {children}
