@@ -12,3 +12,7 @@
 .login-form > input {
     width: 300px;
 }
+
+.login-button {
+    margin-top: 5px;
+}

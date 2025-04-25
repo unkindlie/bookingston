@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, MouseEvent, useRef, useEffect } from "react";
+import { MdOutlineClose } from "react-icons/md";
 
 import "./Modal.styles.css";
 
@@ -9,12 +10,13 @@ type TModalProps = Partial<{
     onClose: () => void;
     children: React.ReactNode;
     title: string;
+    close: boolean;
 }>;
 
-const Modal = ({ open, onClose, title, children }: TModalProps) => {
+const Modal = ({ open, onClose, title, children, close }: TModalProps) => {
     const ref = useRef<HTMLDivElement | null>(null);
     const handleClose = useCallback(
-        (e: MouseEvent<HTMLDivElement>) => {
+        (e: MouseEvent<HTMLOrSVGElement>) => {
             if (e.target === e.currentTarget) {
                 ref.current?.classList.replace(
                     "modal-container",
@@ -42,7 +44,12 @@ const Modal = ({ open, onClose, title, children }: TModalProps) => {
     return (
         <div onClick={handleClose} ref={ref} className="modal-closed">
             <div className="modal">
-                <span className="modal-title">{title}</span>
+                <div className="modal-header">
+                    <span className="modal-title">{title}</span>
+                    {close && (
+                        <MdOutlineClose onClick={handleClose} size={18} />
+                    )}
+                </div>
                 {children}
             </div>
         </div>

@@ -45,3 +45,13 @@
     font-weight: 600;
     font-size: 1.25em;
 }
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header > svg {
+    cursor: pointer;
+}

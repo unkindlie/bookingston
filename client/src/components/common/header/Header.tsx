@@ -28,7 +28,12 @@ const Header = () => {
                 </div>
             </header>
             {open && (
-                <Modal open={open} onClose={invertOpen} title="Авторизація">
+                <Modal
+                    close
+                    open={open}
+                    onClose={invertOpen}
+                    title="Авторизація"
+                >
                     <LoginForm />
                 </Modal>
             )}

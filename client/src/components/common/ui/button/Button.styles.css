@@ -1,0 +1,23 @@
+.button-default {
+    border: 0;
+    border-radius: 4px;
+
+    font-family: 'Raleway';
+    font-weight: 600;
+    font-size: 15px;
+
+    color: white;
+    background-color: #1856da;
+    transition: background-color 0.2s;
+
+    cursor: pointer;
+}
+
+.button-default:hover {
+    background-color: rgb(58, 111, 224)
+}
+
+.button-default:disabled {
+    color: #ffffff;
+    background-color: #cdcdcd;
+}

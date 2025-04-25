@@ -1,3 +1,3 @@
-export const cnMerge = (...classNames: string[]): string => {
+export const cnMerge = (...classNames: (string | undefined)[]): string => {
     return classNames.join(" ");
 };

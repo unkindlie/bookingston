@@ -1,16 +1,22 @@
 import { ComponentPropsWithRef } from "react";
 
-import "./Input.styles.css";
 import { InputLabel } from "./inner/InputLabel";
+
+import "./Input.styles.css";
 
 type InputPropsWithLabel = ComponentPropsWithRef<"input"> & {
     labelText?: string;
 };
 
-const Input = ({ ref, labelText, ...props }: InputPropsWithLabel) => {
+const Input = ({ ref, labelText, required, ...props }: InputPropsWithLabel) => {
     return (
         <>
-            {labelText && <InputLabel>{labelText}</InputLabel>}
+            {labelText && (
+                <div className='label-row'>
+                    <InputLabel>{labelText}</InputLabel>
+                    {required && <span>*</span>}
+                </div>
+            )}
             <input ref={ref} {...props} />
         </>
     );
