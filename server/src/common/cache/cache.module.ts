@@ -29,12 +29,10 @@ export class CacheModule {
                         };
                     },
                     inject: [ConfigService],
-                    isGlobal: true,
                 }),
             ],
             providers: [CacheService],
             exports: [CacheService],
-            global: true,
         };
     }
 }

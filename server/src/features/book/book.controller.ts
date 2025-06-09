@@ -26,6 +26,7 @@ import * as BookConstants from './constants/book.constants';
 import { BookSearchDto } from './dto/book-search.dto';
 import { PaginatedDataDto } from '../../common/util/dto/paginated-data.dto';
 import { BookEditDto } from './dto/book-edit.dto';
+import { Public } from '../auth/decorators/public.decorator';
 
 // TODO: create an interceptor that takes parameters to create a directory-like key for Redis Insight
 @Controller('books')
@@ -33,6 +34,7 @@ export class BookController {
     constructor(private service: BookService) {}
 
     @ExposingSerialization(PaginatedDataDto(BookShortDto))
+    @Public()
     @Get()
     async getBooks(
         @Query(new ValidationPipe({ skipMissingProperties: false }))
