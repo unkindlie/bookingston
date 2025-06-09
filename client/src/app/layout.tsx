@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display, Rubik } from "next/font/google";
+import { ConfigProvider } from "antd";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
-import { StoreProvider } from '../providers/store.provider';
+import { StoreProvider } from "../providers/store.provider";
+import { Container } from "../components/common/container/Container";
 import "./globals.css";
 
-const geistSans = Geist({
-    variable: "--font-geist-sans",
-    subsets: ["latin"],
+const rubik = Rubik({
+    subsets: ["latin", "cyrillic"],
 });
 
-const geistMono = Geist_Mono({
-    variable: "--font-geist-mono",
-    subsets: ["latin"],
+const playfairD = Playfair_Display({
+    subsets: ["latin", "cyrillic"],
 });
 
 export const metadata: Metadata = {
@@ -27,9 +28,21 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                className={`${rubik.className} ${playfairD.className} antialiased`}
             >
-                <StoreProvider>{children}</StoreProvider>
+                <StoreProvider>
+                    <AntdRegistry>
+                        <ConfigProvider
+                            theme={{
+                                token: {
+                                    fontFamily: "Rubik",
+                                },
+                            }}
+                        >
+                            <Container>{children}</Container>
+                        </ConfigProvider>
+                    </AntdRegistry>
+                </StoreProvider>
             </body>
         </html>
     );
